@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/alexmk92/image-service/internal/database"
+    "github.com/alexmk92/image-service/internal/image"
 	transportHTTP "github.com/alexmk92/image-service/internal/transport/http"
 )
 
@@ -14,7 +16,17 @@ type App struct {
 
 func (app *App) Run() error {
     fmt.Println("Setting up App")
-    handler := transportHTTP.NewHandler()
+    var err error
+    db, err := database.NewDatabase()
+    if err != nil {
+        return err
+    }
+
+    database.MigrateDB(db)
+
+    imageService := image.NewService(db)
+
+    handler := transportHTTP.NewHandler(imageService)
     handler.SetupRoutes()
 
     if err := http.ListenAndServe(":8089", handler.Router); err != nil {
