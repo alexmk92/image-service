@@ -1,4 +1,4 @@
-package s3bucket
+package bucket
 
 import (
 	s3Local "github.com/alexmk92/image-service/internal/s3/config"
