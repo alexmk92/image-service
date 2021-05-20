@@ -1,4 +1,4 @@
-package s3
+package s3bucket
 
 import (
 	"github.com/aws/aws-sdk-go/aws"

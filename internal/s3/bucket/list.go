@@ -1,21 +1,27 @@
-package s3
+package s3bucket
 
 import (
+	s3 "github.com/alexmk92/image-service/internal/s3/config"
 	"github.com/aws/aws-sdk-go/aws"
 	log "github.com/sirupsen/logrus"
-    "github.com/alexmk92/image-service/internal/s3/config"
 )
 
-func list() {
+type BucketManager struct {
+    Client *s3.AwsClient
+}
+
+// Creates a new bucket that we can interact with
+func NewBucketManager(s3Client *s3.AwsClient) *BucketManager {
+    return &BucketManager{
+        Client: s3Client,
+    }
+}
+
+// List - print the contents of the bucket
+func (b *BucketManager) List() {
     log.Info("Listing buckets")
 
-    client := AwsClient{}
-    err := client.Init("eu-west-2")
-    if err != nil {
-        panic(err)
-    }
-
-    result, err := client.S3Service.ListBuckets(nil)
+    result, err := b.Client.ListBuckets(nil)
     if err != nil {
         log.Fatal("Error listing buckets")
     }
