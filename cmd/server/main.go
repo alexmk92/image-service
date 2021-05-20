@@ -1,21 +1,28 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/alexmk92/image-service/internal/database"
     "github.com/alexmk92/image-service/internal/image"
 	transportHTTP "github.com/alexmk92/image-service/internal/transport/http"
+
+    log "github.com/sirupsen/logrus"
 )
 
-// App - pointers to db connections etc
+// App - contain application information
 type App struct {
-
+    Name string
+    Version string
 }
 
 func (app *App) Run() error {
-    fmt.Println("Setting up App")
+    log.SetFormatter(&log.JSONFormatter{})
+    log.WithFields(log.
+            Fields{"AppName": app.Name, "AppVersion": app.Version}).
+            Info("Setting up Application",
+    )
+
     var err error
     db, err := database.NewDatabase()
     if err != nil {
@@ -29,18 +36,20 @@ func (app *App) Run() error {
     handler := transportHTTP.NewHandler(imageService)
     handler.SetupRoutes()
 
-    if err := http.ListenAndServe(":8089", handler.Router); err != nil {
-        fmt.Println("Failed to set up server")
+    if err := http.ListenAndServe(":8080", handler.Router); err != nil {
+        log.Error("Failed to set up server")
         return err
     }
     return nil
 }
 
 func main() {
-    fmt.Println("Image service")
-    app := App{}
+    app := App{
+        Name: "Image Service",
+        Version: "1.0.0",
+    }
     if err := app.Run(); err != nil {
-        fmt.Println("Error starting up our REST API")
-        fmt.Println(err)
+        log.Error("Error starting up our REST API")
+        log.Fatal(err)
     }
 }

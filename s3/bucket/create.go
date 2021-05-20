@@ -1,17 +1,16 @@
-package bucket
+package s3
 
 import (
-	"fmt"
-	"log"
-
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+
+    log "github.com/sirupsen/logrus"
 )
 
 func create() {
-    fmt.Println("Creating buckets")
+    log.Info("Creating buckets")
 
     sess, err := session.NewSession(&aws.Config{
         Region: aws.String("eu-west-2")},
@@ -42,5 +41,5 @@ func create() {
         }
     }
 
-    log.Println(result)
+    log.Info(result)
 }
