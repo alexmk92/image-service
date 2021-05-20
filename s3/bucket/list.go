@@ -1,8 +1,9 @@
 package s3
 
 import (
-    "github.com/aws/aws-sdk-go/aws"
-    log "github.com/sirupsen/logrus"
+	"github.com/aws/aws-sdk-go/aws"
+	log "github.com/sirupsen/logrus"
+    "github.com/alexmk92/image-service/internal/s3/config"
 )
 
 func list() {
